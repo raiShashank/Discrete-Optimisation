@@ -66,3 +66,7 @@ maxPossible = l.calcTightBound(capacity , 0 )
 l.tightBound(0 , capacity , 0 , maxPossible)
 print l.maxValue
 print l.recursion
+
+#look when I am at a node,maxPossible shd mean given dat what has happened till now what is d best dat can b done wid dis bag,I might hav made a 
+# wrong choice earlier, but maxPossible shd not show m now dat look wr max can b X(if u had not taken dat item) since I will then make right choice
+# in other branch hence I am not losing anything, anyway I can't change whatever I have already done
