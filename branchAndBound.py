@@ -13,9 +13,9 @@ class LinearEqn(object):
 	def branchAndBound(self,current_value , capacity , max_possible , item):
 		if item == self.num_items or capacity == 0:
 			if current_value > self.maxValue:
-				self.maxValue = current_value
+				self.maxValue = current_value	#self.maxValue stores d tentative soln,u change it only when u find another probable soln i.e capacity = 0 or all items r considered
 			return 0
-		if max_possible <= self.maxValue:
+		if max_possible <= self.maxValue:		#which is up nd which below doesn't make any difference since whichever is true will end d curreent recursion
 			return 0
 		self.recursion += 1
 		if capacity - self.weights[item] >= 0:
