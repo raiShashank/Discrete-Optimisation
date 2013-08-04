@@ -10,18 +10,14 @@ class LinearEqn(object):
 		self.maxValue = 0
 		self.num_items = len(self.values)
 		
-	def calcTightBound(self , capacity , itemNotTaken):
+	def calcTightBound(self , capacity , start):
 		"""
 			capacity : int denoting current capacity of node/bag
 			values,weights : list of ints
 		"""
 		maxPossible = 0
-		values = []
-		weights = []
-		for item in xrange(self.num_items):
-			if item not in itemNotTaken:
-				values.append(self.values[item])
-				weights.append(self.weights[item])
+		values = self.values[start:]
+		weights = self.weights[start:]
 		
 		i = 0
 		valuePerWeight = {}
@@ -41,10 +37,10 @@ class LinearEqn(object):
 				maxPossible += capacity * elem
 				capacity = 0
 				break
-		print maxPossible
+		#print maxPossible
 		return maxPossible
 		
-	def tightBound(self , current_value , capacity, itemNotTaken , maxPossible,item):
+	def tightBound(self , current_value , capacity, item , maxPossible):
 		if maxPossible <= self.maxValue:
 			return 0
 		if item == self.num_items or capacity == 0:
@@ -55,17 +51,18 @@ class LinearEqn(object):
 		self.recursion += 1
 		#print self.recursion,"\t",current_value,"\t",capacity,"\t",maxPossible
 		if capacity - self.weights[item] >= 0:
-			self.tightBound(current_value + self.values[item] , capacity - self.weights[item] , itemNotTaken[:] , maxPossible,item + 1)	#taken d item
+			self.tightBound(current_value + self.values[item] , capacity - self.weights[item] , item + 1 , maxPossible)	#taken d item
 		
-		itemNotTaken.append(item)
-		maxPossible = self.calcTightBound(self.capacity , itemNotTaken)
-		self.tightBound(current_value , capacity , itemNotTaken[:] , maxPossible,item +1 )
+		
+		maxPossible = current_value + self.calcTightBound(capacity , item + 1)
+		#print maxPossible
+		self.tightBound(current_value , capacity , item + 1 , maxPossible )
 
 values = [45,48,35]
-weights = [5,8,2]
+weights = [5,8,3]
 capacity = 10
 l = LinearEqn(values , weights , capacity)
-maxPossible = l.calcTightBound(capacity , [] )
-l.tightBound(0 , capacity , [] , maxPossible , 0)
+maxPossible = l.calcTightBound(capacity , 0 )
+l.tightBound(0 , capacity , 0 , maxPossible)
 print l.maxValue
 print l.recursion
