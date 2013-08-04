@@ -1,3 +1,5 @@
+TAKEN = 1
+NOT_TAKEN = 0
 class LinearEqn(object):
 	def __init__(self,values,weights,capacity):
 		"""values and weights : list of ints
@@ -7,6 +9,7 @@ class LinearEqn(object):
 		self.weights = weights
 		self.capacity = capacity
 		self.recursion = 0
+		self.solution = []		#don't know how 2 find d items which were put aprt frm another exhaustive serach
 		
 	def exhaust(self,sampleSpace , capacity):
 		"""
