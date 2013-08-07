@@ -8,6 +8,7 @@ class DynamicProgramming(object):
 		self.values = values
 		self.weights = weights
 		self.numItems = len(values)
+		#self.iteration = 0
 		
 	def newList(self):
 		"""
@@ -16,7 +17,7 @@ class DynamicProgramming(object):
 		tempList = []
 		i = 0
 		while i <= self.capacity:
-			tempList.append((0,[]))
+			tempList.append(0)
 			i += 1
 		return tempList
 		
@@ -30,33 +31,53 @@ class DynamicProgramming(object):
 		#print col1
 		#print col2
 		k,j = 0,0
-		col2[k][1].append(0)
+		#col2[k][1].append(0)
 		for j in xrange(1,self.numItems + 1):		#[1,numItems]
-			for k in xrange(1,self.capacity + 1):	#k : capacity [1,capacity]
+			for k in xrange(0,self.capacity + 1):	#k : capacity [1,capacity]
 				if self.weights[j - 1] > k:
-					optimalSoln = col1[k][1][:]
-					optimalSoln.append(0)
-					col2[k] = (col1[k][0],optimalSoln)	#0 denotes dat jth iitem is not taken 2 optimally fill d bag of wt w frm items [1,j]
+					
+					col2[k] = col1[k]	#0 denotes dat jth iitem is not taken 2 optimally fill d bag of wt w frm items [1,j]
 				else:
-					check = cmp(col1[k][0] , self.values[j - 1] + col1[k  - self.weights[j - 1]][0])
-					if check >= 0 :		# if > den jth item shd not b included , but if = den dere exists a soln by including as well as by not
-						optimalSoln = col1[k][1][:]
-						optimalSoln.append(0)
-						col2[k] = (col1[k][0] , optimalSoln)	#mind u opt soln 2 fill d bag wid capacity k exists both ways,rite now I can't say anything about d full bag
-					else:		#include d jth item
-						optimalSoln = col1[k  - self.weights[j - 1]][1][:]
-						optimalSoln.append(1)
-						col2[k] = (self.values[j - 1] + col1[k  - self.weights[j - 1]][0] , optimalSoln)
-			print col2	
+					
+					col2[k] = max(col1[k] , self.values[j - 1] + col1[k  - self.weights[j - 1]])
+			#print col2	
 			col1 = col2
 			col2 = self.newList()
-			
-		return col1[self.capacity][0],col1[self.capacity][1]
+			print k,j
+		return col1[self.capacity]
+
+def solveIt(inputData):
+	lines = inputData.split('\n')
+	
+	firstLine = lines[0].split()
+	items = int(firstLine[0])
+	capacity = int(firstLine[1])
+	
+	values = []
+	weights = []
+	
+	for i in range(1, items+1):
+		line = lines[i]
+	
+		parts = line.split()
 		
-values = [45,48,35]
-weights = [5,8,3]
-capacity = 10
-dp = DynamicProgramming(capacity , values , weights)
-maxPossible, configuration = dp.dynamicProgramming()
-print maxPossible
-print configuration
+		values.append(int(parts[0]))
+		weights.append(int(parts[1]))
+		
+	#print values
+	#print weights
+	dp = DynamicProgramming(capacity , values , weights)
+	maxPossible = dp.dynamicProgramming()
+	return maxPossible
+
+import sys	
+if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        fileLocation = sys.argv[1].strip()
+        inputDataFile = open(fileLocation, 'r')
+        inputData = ''.join(inputDataFile.readlines())
+        inputDataFile.close()
+        print solveIt(inputData)
+    else:
+        print 'This test requires an input file.  Please select one from the data directory. (i.e. python solver.py ./data/ks_4_0)'
+        
