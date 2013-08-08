@@ -75,6 +75,39 @@ class Table:
 			s = sum(remainingItem.values())
 			if s == 0:
 				break
+				
+	def greedyAlgo3(self):
+		dynamicSetLength = []
+		for i in self.setToItems.keys():
+			dynamicSetLength.append(len(self.setToItems[i]))
+		remainingItem = {}
+		for i in xrange(self.numItems):
+			remainingItem[i] = 1
+		
+		for i in xrange(self.numSubsets):
+			setNo = self.findSetWithMaxElements(dynamicSetLength)
+			self.answer.append(setNo + 1)
+			items = self.setToItems[setNo]
+			for item in items:
+				if remainingItem[item] > 0:
+					remainingItem[item] -= 1
+				for sets in self.itemToSets[item]:
+					dynamicSetLength[sets] -= 1
+					
+			
+			s = sum(remainingItem.values())
+			if s == 0:
+				break
+				
+	def findSetWithMaxElements(self,dynamicSetLength):
+		maxIndex = 0
+		maxLength = dynamicSetLength[maxIndex]
+		for i in xrange(1,self.numSubsets):
+			if dynamicSetLength[i] > maxLength:
+				maxIndex = i
+				maxLength = dynamicSetLength[i]
+		return maxIndex
+		
 def main(inputData):
 	"""
 		inputData : string read from file which has "\n" for every newline in original file
@@ -103,7 +136,9 @@ def main(inputData):
 	t = Table(numItems , numSubsets , matrix)
 	#t.greedyAlgo1()
 	#print t.answer
-	t.greedyAlgo2()
+	#t.greedyAlgo2()
+	#print t.answer
+	t.greedyAlgo3()
 	print t.answer
 	#print t
 	return 0
