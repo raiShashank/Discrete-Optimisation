@@ -39,7 +39,7 @@ class Table:
 		for i in xrange(self.numItems):
 			remainingItem[i] = 1
 		for i in xrange(self.numSubsets):
-			self.answer.append(i)
+			self.answer.append(i + 1)
 			items = self.setToItems[i]
 			for item in items:
 				if remainingItem[item] > 0:
@@ -49,8 +49,32 @@ class Table:
 			if s == 0:
 				break
 			
+	def greedyAlgo2(self):
+		remainingItem = {}
+		for i in xrange(self.numItems):
+			remainingItem[i] = 1
+		numOfItems = {}
+		for i in xrange(self.numSubsets):
+			numOfItems[len(self.setToItems[i])] = numOfItems.get(len(self.setToItems[i]),[])
+			numOfItems[len(self.setToItems[i])].append(i)
 			
-		
+		c = sorted(numOfItems.keys(),reverse = True)
+		k = 0
+		for i in xrange(self.numSubsets):
+			setNo = numOfItems[c[k]].pop()
+			self.answer.append(setNo + 1)
+			
+			if len(numOfItems[c[k]]) == 0:
+				numOfItems.pop(c[k])
+				k += 1
+			items = self.setToItems[setNo]
+			for item in items:
+				if remainingItem[item] > 0:
+					remainingItem[item] -= 1
+			
+			s = sum(remainingItem.values())
+			if s == 0:
+				break
 def main(inputData):
 	"""
 		inputData : string read from file which has "\n" for every newline in original file
@@ -77,7 +101,9 @@ def main(inputData):
 			matrix[i].append(parts[j])
 			
 	t = Table(numItems , numSubsets , matrix)
-	t.greedyAlgo1()
+	#t.greedyAlgo1()
+	#print t.answer
+	t.greedyAlgo2()
 	print t.answer
 	#print t
 	return 0
