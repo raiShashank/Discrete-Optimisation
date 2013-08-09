@@ -88,11 +88,15 @@ class Chess(object):
 			self.encode(chess)
 			#self.solution += 1
 			return 0
-		for i in xrange(self.dimension):
+		i = row + 1
+		while i  < self.dimension:
 			#print i
 			#if j < self.dimension:
 			if sum(chess[i]) == self.dimension + 1:	#d next row already contains a queen
-				continue
+				i += 1
+			else:
+				break
+		if i < self.dimension:
 			for j in xrange(self.dimension):
 				if chess[i][j] == 0:
 					#count += 1
@@ -178,16 +182,23 @@ class Chess(object):
 		# must not hav come in d first place
 		chess[row][col] = 2		#want 2 go 2 chess[y] row nd col no. x of dis row
 		
-c = Chess(7)
+c = Chess(9)
 #print c
 col = 0
+limit = c.dimension % 2
+
 while col < c.dimension:	#in d play function, for every greater row I m checking fr every column.hence I have made here sure dat 1st col also 
-	c.play(c.board,0,col)	#keeps changing
+	copy = c.replicate(c.board)
+	c.play(copy,0,col)	#keeps changing
 	col += 1
+#if c.dimension % 2 == 1:
+	#copy = c.replicate(c.board)
+	#c.play(copy,0,col)
 #print c
+c.printSolutions()
 if c.solution == 0:
 	print "not possible on  a chessboard with dimension  %d" % c.dimension
 else:
 	print "No. of solutions = \t", c.solution
 print "No. of recursion",c.recursion
-c.printSolutions()
+
