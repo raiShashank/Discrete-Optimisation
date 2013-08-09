@@ -51,7 +51,7 @@ class Chess(object):
 					return 1
 				if sigma == self.dimension - 1:
 					
-					for y in xrange(self.dimension):
+					for j in xrange(self.dimension):
 						if chess[i][j] == 0:
 							repeat = False
 							#chess[i][j] = 2
@@ -166,8 +166,8 @@ class Chess(object):
 			chess[row + i][col + i] = 1
 			i += 1
 		i = 0
-		while row - i >= 0 and col + i >= 0:
-			chess[row - i][col - i] = 1	
+		while row - i >= 0 and col + i < self.dimension:
+			chess[row - i][col + i] = 1	
 			i += 1
 		i = 0	
 		while row + i < self.dimension and col - i >= 0:
@@ -182,7 +182,7 @@ class Chess(object):
 		# must not hav come in d first place
 		chess[row][col] = 2		#want 2 go 2 chess[y] row nd col no. x of dis row
 		
-c = Chess(9)
+c = Chess(10)
 #print c
 col = 0
 limit = c.dimension % 2
